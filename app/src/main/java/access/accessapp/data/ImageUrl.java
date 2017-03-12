@@ -5,19 +5,12 @@ import org.simpleframework.xml.Root;
 
 // 子要素を持つ要素に指定
 @Root(strict = false) /* メンバに定義していない要素は単に無視 */
-public class ImageUrls {
+public class ImageUrl {
 
-    @Element(name = "shop_image1")
+    @Element(name = "shop_image1", required = false)
     private String mShopImage1;
 
-    @Element(name = "shop_image2")
-    private String mShopImage2;
-
-    public String getmShopImage1() {
+    public String getShopImage1() {
         return mShopImage1;
-    }
-
-    public String getmShopImage2() {
-        return mShopImage2;
     }
 }

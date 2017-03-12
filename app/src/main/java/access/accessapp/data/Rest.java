@@ -1,10 +1,12 @@
 package access.accessapp.data;
 
+import android.support.annotation.NonNull;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-import java.util.List;
+import static android.R.attr.name;
 
 // 子要素を持つ要素に指定
 @Root(strict = false) /* メンバに定義していない要素は単に無視 */
@@ -20,8 +22,8 @@ public class Rest {
     @Element(name = "url")
     private String mUrl;
 
-    @ElementList(inline = true, required = false)
-    private List<ImageUrls> mImageUrl;
+    @Element(name = "image_url", required = false)
+    private ImageUrl mImageUrlList;
 
     public String getId() {
         return mId;
@@ -47,11 +49,12 @@ public class Rest {
         this.mUrl = url;
     }
 
-    public List<ImageUrls> getImageUrlList(int i) {
-        return mImageUrl;
+    @NonNull
+    public ImageUrl getImageUrlList() {
+        return mImageUrlList;
     }
 
-    public void setImageUrlList(List<ImageUrls> imageUrlList) {
-        this.mImageUrl = imageUrlList;
+    public void setImageUrlList(ImageUrl imageUrlList) {
+        this.mImageUrlList = imageUrlList;
     }
 }

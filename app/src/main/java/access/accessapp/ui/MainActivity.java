@@ -8,11 +8,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -31,11 +36,23 @@ public class MainActivity extends BaseActivity {
     private GuruNaviApiInterface mApiInterface;
     private ListView mListView;
 
+    private String mLatitude;
+    private String mLongitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        if(intent != null){
+            mLatitude = intent.getStringExtra("LATITUDE");
+            mLongitude = intent.getStringExtra("LONGITUDE");
+        } else {
+            mLatitude ="35.446876";
+            mLatitude ="139.638032";
+        }
+
         mListView = (ListView) findViewById(R.id.listView);
 
         // SimpleXmlConverter: APIレスポンスを作成したPOJOクラスにパースすることができる
@@ -47,15 +64,24 @@ public class MainActivity extends BaseActivity {
 
         // Web APIアクセス用インタフェース作成
         mApiInterface = retrofit.create(GuruNaviApiInterface.class);
-        execGetGnaviApi();
+        execGetGuruNaviApi();
     }
 
     /**
      * Web API実行用
      */
-    private void execGetGnaviApi() {
+    private void execGetGuruNaviApi() {
         // Web API実行用インスタンス(インタフェース)を取得します。
-        Call<Res> call = mApiInterface.getShop(GuruNaviApiInterface.KEYID, GuruNaviApiInterface.FORMAT, GuruNaviApiInterface.FREEWORD);
+        Call<Res> call = mApiInterface.getShop(
+                GuruNaviApiInterface.KEYID,
+                GuruNaviApiInterface.FORMAT,
+                GuruNaviApiInterface.FREEWORD,
+            //  GuruNaviApiInterface.LATITUDE,
+                mLatitude,
+            //  GuruNaviApiInterface.LONGITUDE,
+                mLongitude,
+                GuruNaviApiInterface.RANGE
+                );
 
         // Web APIを実行します
         // コールバック呼び出しで処理結果が通知されます
@@ -68,9 +94,9 @@ public class MainActivity extends BaseActivity {
 
                 Res res = response.body();
 
-                List<Rest> rests = res.getRestList();
+                List<Rest> restList = res.getRestList();
 
-                RestAdapter adapter = new RestAdapter(MainActivity.this, R.layout.list_item, rests);
+                RestAdapter adapter = new RestAdapter(MainActivity.this, R.layout.list_item, restList);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -90,13 +116,17 @@ public class MainActivity extends BaseActivity {
             public void onFailure(Call<Res> call, Throwable t) {
                 Log.d("AAA", "Failed to request : " + t.getCause() + ", " + t.getMessage());
                 t.printStackTrace();
+
+                // 暫定対応
+                Toast.makeText(MainActivity.this, "Sorr Request Empty...", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
 
-    private static class RestAdapter extends ArrayAdapter<Rest> {
-        RestAdapter(Context context, int resource, List<Rest> objects) {
-            super(context, resource, objects);
+    private class RestAdapter extends ArrayAdapter<Rest> {
+        RestAdapter(Context context, int resource, List<Rest> restList) {
+            super(context, resource, restList);
         }
 
         @Override
@@ -106,17 +136,24 @@ public class MainActivity extends BaseActivity {
                 convertView = inflater.inflate(R.layout.list_item, null);
             }
 
-            Rest item = this.getItem(position);
+            Rest rest = this.getItem(position);
 
-            TextView id = (TextView) convertView.findViewById(R.id.id);
-            id.setText(item.getId());
-
+            // 店名セット
             TextView shopName = (TextView) convertView.findViewById(R.id.shopName);
-            shopName.setText(String.valueOf(item.getShopName()));
+            shopName.setText(String.valueOf(rest.getShopName()));
 
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-            Uri uri = Uri.parse("");
-            imageView.setImageURI(uri);
+            // 画像
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.shopImage);
+            Glide.with(this.getContext())
+                    .load(rest.getImageUrlList().getShopImage1())
+                    // エラー画像
+                    .error(android.R.drawable.ic_menu_gallery)
+                    .into(imageView);
+
+            // XMLで定義したアニメーションを読み込む
+            Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.item_motion);
+            // リストアイテムのアニメーションを開始
+            convertView.startAnimation(anim);
 
             return convertView;
         }

@@ -2,21 +2,26 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="access.accessapp">
-
+    <!-- ネットワーク権限許可 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 位置情報 GPSから -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 位置情報 ネットワークから -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_app"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.StartActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" >
+            android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -24,10 +29,9 @@
         </activity>
 
         <activity
-            android:name=".ui.StartActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:clearTaskOnLaunch="true">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         </activity>
     </application>
 
