@@ -23,6 +23,9 @@ public interface GuruNaviApiInterface {
     // 経度: 139.638032
     String LONGITUDE = "139.638032";
 
+    String CATEGRY_L = "RSFST08000";
+    String HIT_PAGE = "15";
+
     /**
      * https://api.gnavi.co.jp/RestSearchAPI/20150630/?keyid=57d4fbeaecbf2fd5e58bb45577ec4b01&format=xml&freeword=家系
      * カスタム
@@ -33,13 +36,17 @@ public interface GuruNaviApiInterface {
      * &range=4
      * &latitude=35.446876
      * &longitude=139.638032
+     * &hit_per_page=15
+     * &category_l=RSFST08000
      */
     @GET("/RestSearchAPI/20150630/")
-    Call<Res> getShop(@Query("keyid")     String KEYID,
-                      @Query("format")    String FORMAT,
-                      @Query("freeword")  String FREEWORD,
-                      @Query("latitude")  String LATITUDE,
-                      @Query("longitude") String LONGITUDE,
-                      @Query("range")     String RANGE
+    Call<Res> getShop(@Query("keyid")        String KEYID,
+                      @Query("format")       String FORMAT,
+                      @Query("freeword")     String FREEWORD,
+                      @Query("latitude")     String LATITUDE,
+                      @Query("longitude")    String LONGITUDE,
+                      @Query("range")        String RANGE,
+                      @Query("category_l")   String CATEGORY_L,
+                      @Query("hit_per_page") String HIT_PAGE
                       );
 }

@@ -13,11 +13,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import java.util.List;
 
@@ -46,11 +52,11 @@ public class MainActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if(intent != null){
-            mLatitude = intent.getStringExtra("LATITUDE");
+            mLatitude  = intent.getStringExtra("LATITUDE");
             mLongitude = intent.getStringExtra("LONGITUDE");
         } else {
-            mLatitude ="35.446876";
-            mLatitude ="139.638032";
+            mLatitude  = GuruNaviApiInterface.LATITUDE;
+            mLongitude = GuruNaviApiInterface.LONGITUDE;
         }
 
         mListView = (ListView) findViewById(R.id.listView);
@@ -65,6 +71,19 @@ public class MainActivity extends BaseActivity {
         // Web APIアクセス用インタフェース作成
         mApiInterface = retrofit.create(GuruNaviApiInterface.class);
         execGetGuruNaviApi();
+        setAd();
+    }
+
+    private void setAd() {
+        PublisherAdView adView = (PublisherAdView) findViewById(R.id.publisherAdView);
+
+        // 一般的なリクエストを行う
+        PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        // 広告リクエストを行って adView を読み込む
+        adView.loadAd(adRequest);
     }
 
     /**
@@ -76,11 +95,11 @@ public class MainActivity extends BaseActivity {
                 GuruNaviApiInterface.KEYID,
                 GuruNaviApiInterface.FORMAT,
                 GuruNaviApiInterface.FREEWORD,
-            //  GuruNaviApiInterface.LATITUDE,
                 mLatitude,
-            //  GuruNaviApiInterface.LONGITUDE,
                 mLongitude,
-                GuruNaviApiInterface.RANGE
+                GuruNaviApiInterface.RANGE,
+                GuruNaviApiInterface.CATEGRY_L,
+                GuruNaviApiInterface.HIT_PAGE
                 );
 
         // Web APIを実行します

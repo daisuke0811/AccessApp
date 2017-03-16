@@ -3,10 +3,7 @@ package access.accessapp.data;
 import android.support.annotation.NonNull;
 
 import org.simpleframework.xml.Element;
-import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
-
-import static android.R.attr.name;
 
 // 子要素を持つ要素に指定
 @Root(strict = false) /* メンバに定義していない要素は単に無視 */
