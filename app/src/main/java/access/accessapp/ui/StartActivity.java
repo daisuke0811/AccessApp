@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import access.accessapp.R;
 
-public class StartActivity extends BaseActivity implements LocationListener{
+public class StartActivity extends BaseActivity implements LocationListener {
 
     private ImageButton mImageButton;
 
@@ -59,7 +59,8 @@ public class StartActivity extends BaseActivity implements LocationListener{
             Log.d("debug", "gpsEnabled");
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
 
             Log.d("debug", "checkSelfPermission false");
@@ -79,11 +80,11 @@ public class StartActivity extends BaseActivity implements LocationListener{
         if (location != null) {
             // 緯度の表示
             mLatitude = String.valueOf(location.getLatitude());
-            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
 
             // 経度の表示
             mLongitude = String.valueOf(location.getLongitude());
-            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
         }
     }
 
