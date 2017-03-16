@@ -14,7 +14,7 @@ public interface GuruNaviApiInterface {
 
     String KEYID = "57d4fbeaecbf2fd5e58bb45577ec4b01";
     String FORMAT = "xml"; // xml/json
-    String FREEWORD = "家系,ラーメン";
+    String FREEWORD = "家,ラーメン";
 
     // 緯度/経度からの検索範囲(半径) 1:300m、2:500m、3:1000m、4:2000m、5:3000m
     String RANGE = "4";

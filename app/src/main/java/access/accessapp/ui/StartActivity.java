@@ -7,20 +7,24 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import access.accessapp.R;
 
 public class StartActivity extends BaseActivity implements LocationListener {
-
-    private ImageButton mImageButton;
 
     private LocationManager locationManager;
     private String mLatitude;
@@ -32,8 +36,48 @@ public class StartActivity extends BaseActivity implements LocationListener {
 
         setContentView(R.layout.activity_start);
 
-        mImageButton = (ImageButton) findViewById(R.id.imageButton);
-        mImageButton.setOnClickListener(new OnCustomClickListener());
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.openDrawer(GravityCompat.START);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+
+        ImageButton btn = (ImageButton) header.findViewById(R.id.copyright);
+        btn.setOnClickListener(new CustomClickListener());
+
+        TextView name_tv = (TextView) header.findViewById(R.id.name);
+        name_tv.setText("Powered by ぐるなび");
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_1:
+                        mLatitude  = "35.446876";
+                        mLongitude = "139.638032";
+                        Toast.makeText(StartActivity.this, "現在位置を設定しました", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_2:
+                        mLatitude  = "35.4657858";
+                        mLongitude = "139.6201245";
+                        Toast.makeText(StartActivity.this, "横浜駅に設定しました", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_3:
+                        mLatitude  = "35.4896269";
+                        mLongitude = "139.6277961";
+                        Toast.makeText(StartActivity.this, "このページは未設定です", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_4:
+                        Toast.makeText(StartActivity.this, "このページは未設定です", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
+        findViewById(R.id.btnImage).setOnClickListener(new CustomClickListener());
 
         // 位置情報取得 権限チェック
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -80,12 +124,12 @@ public class StartActivity extends BaseActivity implements LocationListener {
         if (location != null) {
             // 緯度の表示
             mLatitude = String.valueOf(location.getLatitude());
-//            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
 
             // 経度の表示
             mLongitude = String.valueOf(location.getLongitude());
-//            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
         }
+            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Latitude:"+ String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -144,17 +188,26 @@ public class StartActivity extends BaseActivity implements LocationListener {
         //ロケーションプロバイダが利用不可能になるとコールバックされる
     }
 
-    private class OnCustomClickListener implements View.OnClickListener {
+    private class CustomClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
 
             Intent intent = new Intent();
-            intent.setClassName("access.accessapp", "access.accessapp.ui.MainActivity");
-            intent.putExtra("LATITUDE", mLatitude);
-            intent.putExtra("LONGITUDE", mLongitude);
-            startActivity(intent);
 
-            finish();
+            if (view != null) {
+                switch (view.getId()) {
+                    case R.id.btnImage:
+                        intent.setClassName("access.accessapp", "access.accessapp.ui.ListActivity");
+                        intent.putExtra("LATITUDE", mLatitude);
+                        intent.putExtra("LONGITUDE", mLongitude);
+                        break;
+                    case R.id.copyright:
+                        Uri uri = Uri.parse("https://www.gnavi.co.jp/");
+                        intent = new Intent(Intent.ACTION_VIEW,uri);
+                        break;
+                }
+                startActivity(intent);
+            }
         }
     }
 }

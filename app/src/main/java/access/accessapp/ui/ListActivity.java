@@ -13,15 +13,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
@@ -37,7 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-public class MainActivity extends BaseActivity {
+public class ListActivity extends BaseActivity {
 
     private GuruNaviApiInterface mApiInterface;
     private ListView mListView;
@@ -115,7 +112,7 @@ public class MainActivity extends BaseActivity {
 
                 List<Rest> restList = res.getRestList();
 
-                RestAdapter adapter = new RestAdapter(MainActivity.this, R.layout.list_item, restList);
+                RestAdapter adapter = new RestAdapter(ListActivity.this, R.layout.list_item, restList);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -137,7 +134,7 @@ public class MainActivity extends BaseActivity {
                 t.printStackTrace();
 
                 // 暫定対応
-                Toast.makeText(MainActivity.this, "Sorr Request Empty...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListActivity.this, "Sorr Request Empty...", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
